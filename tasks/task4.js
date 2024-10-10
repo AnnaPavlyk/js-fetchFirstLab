@@ -1,11 +1,26 @@
-"Ваш код повинен зробити DELETE-запит до вказаного URL, де {userId} – це ID користувача, якого потрібно видалити."
-"Поверніть статус відповіді сервера після видалення."
-
-"https://jsonplaceholder.typicode.com/users - адреса куди робити запит"
-
+const https = require('https');
 
 function deleteUser(id) {
-  // Ваш код
+    return new Promise((resolve, reject) => {
+        const options = {
+            hostname: 'jsonplaceholder.typicode.com',
+            path: `/users/${id}`,
+            method: 'DELETE',
+        };
+
+        const req = https.request(options, (res) => {
+            res.on('data', () => {}); 
+            res.on('end', () => {
+                resolve({ status: res.statusCode });
+            });
+        });
+
+        req.on('error', (err) => {
+            reject(err);
+        });
+
+        req.end();
+    });
 }
 
 console.log(deleteUser(1));

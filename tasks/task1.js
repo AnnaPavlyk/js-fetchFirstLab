@@ -1,11 +1,25 @@
-"Ваша функція повинна робити GET-запит до вказаного URL і отримати дані."
-"Поверніть дані користувачів у форматі масиву"
-"Дані мають включати такі поля, як id та name."
-
-"https://jsonplaceholder.typicode.com/users - адреса куди робити запит"
+const https = require('https');
 
 function fetchUsers() {
-  // Ваш код
+    return new Promise((resolve, reject) => {
+        https.get('https://jsonplaceholder.typicode.com/users', (res) => {
+            let data = '';
+
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            res.on('end', () => {
+                const users = JSON.parse(data).map(user => ({
+                    id: user.id,
+                    name: user.name
+                }));
+                resolve(users);
+            });
+        }).on('error', (err) => {
+            reject(err);
+        });
+    });
 }
 
 console.log(fetchUsers())
